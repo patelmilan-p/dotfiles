@@ -1,36 +1,45 @@
-"----------------------------------------------------------------------------------
-" Editor layout
-"---------------------------------------------------------------------------------
-set tags+=gems.tags
-set nosmartindent
-set shortmess+=I
+" Personal preferences
+
 set termencoding=utf-8
 set encoding=utf-8
-set lazyredraw                  " don't update the display while executing macros
-set laststatus=2
-set background=dark
+
 set virtualedit=block
 
-if has("gui_running")
-  set guioptions=egmrt
-  set guioptions-=T
-  set t_Co=256
-  colorscheme Tomorrow-Night
-  set showtabline=2
-  " always show tabbar in gui
-else
-  colorscheme Tomorrow
+set history=5000
+set nojoinspaces
+set noswapfile
+
+if has(mouse)
+  set mouse=nv
 endif
 
-" Fonts
-set guifont=Menlo\ for\ Powerline:h22
-set shell=/bin/zsh
+" Colour scheme
+set background=light
+silent! colorscheme Tomorrow
 
-nnoremap / /\v
-vnoremap / /\v
-" ---------------------------------------------------------------------------------
+set hidden
+
+" Mappings
+nnoremap Q <NOP>
+
+cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')).'/': '%%'
+
+
+map <leader>ew :e %%
+map <leader>es :sp %%
+map <leader>ev :vsp %%
+map <leader>et :tabe %%
+
+" Prompt to open file with same name, different extension
+map <leader>er :e <C-R>=expand("%:r")."."<CR>
+
+
+" Fix the & command in normal+visual modes {{{2
+nnoremap & :&&<Enter>
+xnoremap & :&&<Enter>
+
+
 " force hjkl movement keys. painful but essential
-" ---------------------------------------------------------------------------------
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
@@ -39,119 +48,27 @@ inoremap <up> <nop>
 inoremap <down> <nop>
 inoremap <right> <nop>
 inoremap <left> <nop>
+
+
 nnoremap j gj
 nnoremap k gk
 
-" remap the help key
-" inoremap <F1> <ESC>
-" nnoremap <F1> <ESC>
-" vnoremap <F1> <ESC>
-"
-" ---------------------------------------------------------------------------------
-" remap ; to :, save a keystroke
-" ---------------------------------------------------------------------------------
-nnoremap ; :
 
-" ---------------------------------------------------------------------------------
-" save on losing focus
-" ---------------------------------------------------------------------------------
-au FocusLost * :wa
-
-" ---------------------------------------------------------------------------------
 " map jj to ESC for quicker escaping
-" ---------------------------------------------------------------------------------
 inoremap jj <ESC>
 inoremap kk <ESC>
 inoremap kj <ESC>:w<CR>
-" ---------------------------------------------------------------------------------
+
 " stuff for working with split windows
-" ---------------------------------------------------------------------------------
 nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-" Gundo
-nnoremap <F5> :GundoToggle<CR>
 
-" ---------------------------------------------------------------------------------
-" Aligning Stuff
-" ---------------------------------------------------------------------------------
-
-
-if exists(":Tabularize")
-  nmap <Leader>a= :Tabularize /=<CR>
-  vmap <Leader>a= :Tabularize /=<CR>
-  nmap <Leader>a: :Tabularize /:\zs<CR>
-  vmap <Leader>a: :Tabularize /:\zs<CR>
-  nmap <Leader>a=> :Tabularize /=>\zs<CR>
-  vmap <Leader>a=> :Tabularize /=>\zs<CR>
-  nmap <Leader>a:: :Tabularize /:\zs<CR>
-  vmap <Leader>a:: :Tabularize /:\zs<CR>
-  nmap <Leader>a, :Tabularize /,<CR>
-  vmap <Leader>a, :Tabularize /,<CR>
-  nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-  vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-
-  inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
-
-  function! s:align()
-    let p = '^\s*|\s.*\s|\s*$'
-    if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
-      let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-      let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-      Tabularize/|/l1
-      normal! 0
-      call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-    endif
-  endfunction
-endif
-
-
-" ---------------------------------------------------------------------------------
-" ctags Stuff
-" ---------------------------------------------------------------------------------
-
-
-" Exclude Javascript files in :Rtags via rails.vim due to warnings when parsing
-let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
-
-" Index ctags from any project, including those outside Rails
-map <Leader>ct :!ctags -R .<CR>
-map <Leader>rt :!ctags --extra=+f --exclude=.git --exclude=log -R * <CR><CR>
-
-"---------------------------------------------------------------------------------
-" MISC KEY MAPS
-" --------------------------------------------------------------------------------
 " Clear the search buffer when hitting return
 :nnoremap <CR> :nohlsearch<cr>
-
-" Control+A is Select All.
-"
-noremap  <C-A>  gggH<C-O>G
-inoremap <C-A>  <C-O>gg<C-O>gH<C-O>G
-cnoremap <C-A>  <C-C>gggH<C-O>G
-onoremap <C-A>  <C-C>gggH<C-O>G
-snoremap <C-A>  <C-C>gggH<C-O>G
-xnoremap <C-A>  <C-C>ggVG
-
-" Control+S saves the current file (if it's been changed).
-"
-noremap  <C-S>  :update<CR>
-vnoremap <C-S>  <C-C>:update<CR>
-inoremap <C-S>  <C-O>:update<CR>
-
-" Control+Z is Undo, in Normal and Insert mode.
-"
-"noremap  <C-Z>  u
-"inoremap <C-Z>  <C-O>u
-
-" Control+Y is Redo (but not repeat) in Normal and Insert mode.
-"
-noremap  <C-Y>  <C-R>
-inoremap <C-Y>  <C-O><C-R>
-
 
 " Tab/Shift+Tab indent/unindent the highlighted block (and maintain the
 " highlight after changing the indentation). Works for both Visual and Select
@@ -160,73 +77,22 @@ inoremap <C-Y>  <C-O><C-R>
 vnoremap <Tab>    >gv
 vnoremap <S-Tab>  <gv
 
-" Center the display line after searches. (This makes it *much* easier to see
-" the matched line.)
-"
-" More info: http://www.vim.org/tips/tip.php?tip_id=528
-"
-nnoremap n   nzz
-nnoremap N   Nzz
-nnoremap *   *zz
-nnoremap #   #zz
-nnoremap g*  g*zz
-nnoremap g#  g#zz
-
-
-" Draw lines of dashes or equal signs based on the length of the line
-" immediately above.
-"
-"   k       Move up 1 line
-"   yy      Yank whole line
-"   p       Put line below current line
-"   ^       Move to beginning of line
-"   v$      Visually highlight to end of line
-"   r-      Replace highlighted portion with dashes / equal signs
-"   j       Move down one line
-"   a       Return to Insert mode
-"
-" XXX: Convert this to a function and make the symbol a parameter.
-" XXX: Consider making abbreviations/mappings for ---<CR> and ===<CR>
-"
-inoremap <C-U>- <Esc>kyyp^v$r-ja
-inoremap <C-U>= <Esc>kyyp^v$r=ja
 
 " Make page-forward and page-backward work in insert mode.
 "
 inoremap <C-F>  <C-O><C-F>
 inoremap <C-B>  <C-O><C-B>
 
-" Overload Control+L to clear the search highlight as it's redrawing the screen.
-"
-"nnoremap <C-L>  :nohlsearch<CR><C-L>
-"inoremap <C-L>  <Esc>:nohlsearch<CR><C-L>a
-"vnoremap <C-L>  <Esc>:nohlsearch<CR><C-L>gv
+" Silver Searcher Configuration
+" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
 
-" Keep the working line in the center of the window. This is a toggle, so you
-" can bounce between centered-working-line scrolling and normal scrolling by
-" issuing the keystroke again.
-"
-" From this message on the MacVim mailing list:
-" http://groups.google.com/group/vim_mac/browse_thread/thread/31876ef48063e487/133e06134425bda1?hl=en¿e06134425bda1
-"
-nnoremap \zz  :let &scrolloff=999-&scrolloff<CR>
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
-" Toggle wrapping the display of long lines (and display the current 'wrap'
-" state once it's been toggled).
-"
-nnoremap \w  :set invwrap<BAR>set wrap?<CR>
-
-" Delete to end of line, bash-style.
-"
-imap <C-K> <C-O>D
-
-" Select just-pasted text.
-"
-nnoremap \v  `[v`]
-
-" Make it easy to :Tabularize
-"
-nnoremap \<Tab> <Esc>:Tabularize /
-
-autocmd BufWritePre * :%s/\s\+$//e
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
 

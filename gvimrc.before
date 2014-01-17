@@ -1,12 +1,13 @@
-" No audible bell
-set vb
+set go-=T
+set bg=dark
 
-" No toolbar
-set guioptions-=T
+set guifont=Anonymous\ Pro:h22
+silent! colorscheme Tomorrow
 
 " Use console dialogs
 set guioptions+=c
 
-" set colorscheme
-colorscheme Tomorrow-Night
+" Do not use Aqua scrollbars
+set guioptions-=rL
+
 
