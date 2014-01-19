@@ -4,8 +4,8 @@ tricomsol dotfiles
 Requirements
 ------------
 
-set zsh as your login shell
-  
+set zsh as your login shell.
+
   chsh -s /bin/zsh
 
 Install [rcm](https://github.com/thoughtbot/rcm):
@@ -23,11 +23,11 @@ Install [rcm](https://github.com/thoughtbot/rcm):
 Install
 -------
 
-Clone the repo
+Clone the repo:
 
   git clone git://github.com/tricomsol/dotfiles.git
 
-Symlink your dot files
+Symlink your dot files:
 
   rcup -d dotfiles -x README.md
 
@@ -39,4 +39,3 @@ file is symlinked in.
 You can safely run `rcup` multiple times to update:
 
   rcup
-
