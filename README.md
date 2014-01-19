@@ -27,6 +27,9 @@ Clone the repo:
 
   git clone git://github.com/tricomsol/dotfiles.git
 
+  git submodule update
+
+
 Symlink your dot files:
 
   rcup -d dotfiles -x README.md
